@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>API</title>
+</head>
+<body>
+    <div class="container">
+        <h3>A table containing HTTP Methods</h3>
+        <table>
+            <tr>
+                <th>Path</th>
+                <th>HTTP Methods</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>/</td>
+                <td>GET</td>
+                <td>Renders an index.html</td>
+            </tr>
+            <tr>
+                <td>/add</td>
+                <td>POST</td>
+                <td>Submit data to be processed to a specified resource.</td>
+            </tr>
+            <tr>
+                <td>/update</td>
+                <td>PATCH</td>
+                <td>Apply partial modifications to a resource.</td>
+            </tr>
+            <tr>
+                <td>/delete</td>
+                <td>DELETE</td>
+                <td>Removal of a resource identified by the URL.</td>
+            </tr>
+        </table>
+
+        <h3>A table containing Users</h3>
+        <table>
+            <tr>
+                <th>Description</th>
+                <th>Path</th>
+                <th>Method</th>
+            </tr>
+            <tr>
+                <td>fetch all Users</td>
+                <td>/</td>
+                <td>GET</td>
+            </tr>
+            <tr>
+                <td>fetch a single user</td>
+                <td>/:id</td>
+                <td>GET</td>
+            </tr>
+            <tr>
+                <td>add a new user</td>
+                <td>/register</td>
+                <td>POST</td>
+            </tr>
+        </table>
+
+        <h3>A table containing products</h3>
+        <table>
+            <tr>
+                <th>Description</th>
+                <th>Path</th>
+                <th>Method</th>
+            </tr>
+            <tr>
+                <td>Display all products</td>
+                <td>/</td>
+                <td>GET</td>
+            </tr>
+            <tr>
+                <td>Display one product</td>
+                <td>/:id</td>
+                <td>GET</td>
+            </tr>
+            <tr>
+                <td>add a new product</td>
+                <td>/addProduct</td>
+                <td>POST</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
