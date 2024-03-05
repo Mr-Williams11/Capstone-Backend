@@ -25,33 +25,25 @@ app.listen(PORT, () => {
 });
 
 app.post('/login', async (req, res) => {
-    const { userName, userPassword } = req.body;
+    const { userUsername, userPassword } = req.body;
     try {
-        const hashPassword = await checkUser(userName);
-        if (!hashPassword) {
+        const storedPassword = await checkUser(userUsername);
+        if (!storedPassword) {
             return res.status(401).send({
                 msg: 'User not found'
             });
         }
-        bcrypt.compare(userPassword, hashPassword, (err, result) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send({
-                    msg: 'Internal Server Error'
-                });
-            }
-            if (result) {
-                const token = jwt.sign({ userName: userName }, process.env.SECRET_KEY);
-                return res.send({
-                    token: token,
-                    msg: 'You have logged in'
-                });
-            } else {
-                return res.status(401).send({
-                    msg: 'Passwords do not match'
-                });
-            }
-        });
+        if (userPassword === storedPassword) {
+            const token = jwt.sign({ userUsername: userUsername }, process.env.SECRET_KEY);
+            return res.send({
+                token: token,
+                msg: 'You have logged in'
+            });
+        } else {
+            return res.status(401).send({
+                msg: 'Passwords do not match'
+            });
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send({
@@ -59,3 +51,4 @@ app.post('/login', async (req, res) => {
         });
     }
 });
+

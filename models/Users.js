@@ -67,13 +67,13 @@ const deleteUser = async (userId) => {
         throw error;
     }
 };
-const checkUser = async (userName) => {
+const checkUser = async (userUsername) => {
     try {
         const [[{ userPassword }]] = await pool.query(`
             SELECT userPassword  
             FROM users 
-            WHERE userName = ?
-        `, [userName]);
+            WHERE userUsername = ?
+        `, [userUsername]);
         return userPassword;
     } catch (error) {
         console.error("Error checking user:", error);
