@@ -1,24 +1,61 @@
 import express from 'express';
-import {config} from 'dotenv';
+import { config } from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import UsersRouter from './routes/user.js'
-import ProductsRouter from './routes/products.js'
-config()
+import bcrypt from 'bcrypt'; // Add bcrypt import
+import jwt from 'jsonwebtoken'; // Add jwt import
+import UsersRouter from './routes/user.js';
+import ItemsRouter from './routes/items.js';
+import { addUser, checkUser, getUsers } from './models/Users.js';
 
-const PORT = process.env.PORT
-const app = express()
+config();
 
+const PORT = process.env.PORT;
+const app = express();
 
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static('static'));
+app.use('/users', UsersRouter);
+app.use('/items', ItemsRouter);
 
-
-app.use(cors())
-app.use(express.json())
-app.use(cookieParser())
-app.use(express.static('static'))
-app.use('/users',UsersRouter)
-app.use('/products',ProductsRouter)
-
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log('Server is running on http://localhost:' + PORT);
-})
+});
+
+app.post('/login', async (req, res) => {
+    const { userName, userPassword } = req.body;
+    try {
+        const hashPassword = await checkUser(userName);
+        if (!hashPassword) {
+            return res.status(401).send({
+                msg: 'User not found'
+            });
+        }
+        bcrypt.compare(userPassword, hashPassword, (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send({
+                    msg: 'Internal Server Error'
+                });
+            }
+            if (result) {
+                const token = jwt.sign({ userName: userName }, process.env.SECRET_KEY);
+                return res.send({
+                    token: token,
+                    msg: 'You have logged in'
+                });
+            } else {
+                return res.status(401).send({
+                    msg: 'Passwords do not match'
+                });
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            msg: 'Internal Server Error'
+        });
+    }
+});

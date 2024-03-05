@@ -1,11 +1,10 @@
 import { pool } from '../config/config.js';
 
-// PRODUCT FUNCTIONS
-const getProducts = async () => {
+const getAllItems = async () => {
     try {
         const [products] = await pool.query(`
             SELECT *
-            FROM Products
+            FROM products
         `);
         return products;
     } catch (error) {
@@ -14,11 +13,11 @@ const getProducts = async () => {
     }
 };
 
-const getProductById = async (prodID) => {
+const getItemById = async (prodID) => {
     try {
         const [product] = await pool.query(`
             SELECT *
-            FROM Products
+            FROM products
             WHERE productId = ?
         `, [prodID]);
         return product[0];
@@ -28,10 +27,10 @@ const getProductById = async (prodID) => {
     }
 };
 
-const addProduct = async (prodName, productDesc, Category, Price, productUrl, userId) => {
+const addingItem = async (prodName, productDesc, Category, Price, productUrl, userId) => {
     try {
         const [result] = await pool.query(`
-            INSERT INTO Products (productName, productDesc, Category, Price, productUrl, userId) 
+            INSERT INTO products (productName, productDesc, Category, Price, productUrl, userId) 
             VALUES (?, ?, ?, ?, ?, ?)
         `, [prodName, productDesc, Category, Price, productUrl, userId]);
         return result;
@@ -41,10 +40,10 @@ const addProduct = async (prodName, productDesc, Category, Price, productUrl, us
     }
 };
 
-const editProduct = async (prodName, productDesc, Category, Price, productUrl, userId, prodID) => {
+const editingItem = async (prodName, productDesc, Category, Price, productUrl, userId, prodID) => {
     try {
         await pool.query(`
-            UPDATE Products 
+            UPDATE products 
             SET productName = ?, productDesc = ?, Category = ?, Price = ?, productUrl = ?, userId = ? 
             WHERE productId = ?
         `, [prodName, productDesc, Category, Price, productUrl, userId, prodID]);
@@ -56,10 +55,10 @@ const editProduct = async (prodName, productDesc, Category, Price, productUrl, u
     }
 };
 
-const deleteProduct = async (prodID) => {
+const delItem = async (prodID) => {
     try {
         const [result] = await pool.query(`
-            DELETE FROM Products
+            DELETE FROM products
             WHERE productId = ?
         `, [prodID]);
         return result;
@@ -69,4 +68,4 @@ const deleteProduct = async (prodID) => {
     }
 };
 
-export { getProductById, getProducts, addProduct, editProduct, deleteProduct };
+export { getItemById, getAllItems, addingItem, editingItem, delItem };

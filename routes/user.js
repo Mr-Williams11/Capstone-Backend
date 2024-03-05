@@ -7,9 +7,13 @@ router.route('/')
 .get(controller.getUsers)
 .post(controller.addUser)
 
+router
+    .route('/login')
+        .post(controller.logIn)
+
 router.route('/:userId')
 
-.get(controller.getUser)
+.get(controller.getUserById)
 .patch(controller.editUser)
 .delete(controller.deleteUser)
 

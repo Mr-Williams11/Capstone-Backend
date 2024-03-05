@@ -1,4 +1,8 @@
-import { getUsers, getUserById, addUser, editUser, deleteUser } from "../models/Users.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { getUsers, getUserById, addUser, editUser, deleteUser, checkUser } from "../models/Users.js";
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
 export default {
     getUsers: async (req, res) => {
@@ -25,7 +29,8 @@ export default {
     addUser: async (req, res) => {
         try {
             const { userName, userAge, userEmail, userRole, userPassword, userUsername } = req.body;
-            await addUser(userName, userAge, userEmail, userRole, userPassword, userUsername);
+            const hashedPassword = await bcrypt.hash(userPassword, 10);
+            await addUser(userName, userAge, userEmail, userRole, hashedPassword, userUsername);
             res.send({
                 msg: 'New User Added'
             });
@@ -36,7 +41,8 @@ export default {
     editUser: async (req, res) => {
         try {
             const { userName, userAge, userEmail, userRole, userPassword, userUsername } = req.body;
-            await editUser(+req.params.userId, userName, userAge, userEmail, userRole, userPassword, userUsername);
+            const hashedPassword = await bcrypt.hash(userPassword, 10);
+            await editUser(+req.params.userId, userName, userAge, userEmail, userRole, hashedPassword, userUsername);
             res.send({ msg: 'Edited User Successfully' });
         } catch (error) {
             res.status(500).send({ error: 'Internal Server Error' });
@@ -52,6 +58,21 @@ export default {
             res.send({ msg: 'User Deleted Successfully' });
         } catch (error) {
             res.status(500).send({ error: 'Internal Server Error' });
+        }
+    },
+    logIn: async (req, res, next) => {
+        const { userName, userPassword } = req.body;
+        try {
+            const hashpassword = await checkUser(userName);
+            const result = await bcrypt.compare(userPassword, hashpassword);
+            if (result) {
+                const token = jwt.sign({ userName }, JWT_SECRET, { expiresIn: '1h' });
+                res.json({ token });
+                return;
+            }
+            res.status(401).json({ error: 'Authentication failed' });
+        } catch (error) {
+            res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 };

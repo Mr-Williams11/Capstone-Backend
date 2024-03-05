@@ -1,11 +1,10 @@
 import { pool } from '../config/config.js';
 
-// USER FUNCTIONS
 const getUsers = async () => {
     try {
         const [result] = await pool.query(`
             SELECT *
-            FROM Users
+            FROM users
         `);
         return result;
     } catch (error) {
@@ -14,13 +13,13 @@ const getUsers = async () => {
     }
 };
 
-const getUserById = async (userID) => {
+const getUserById = async (userId) => {
     try {
         const [result] = await pool.query(`
             SELECT *
-            FROM Users
+            FROM users
             WHERE userId = ?
-        `, [userID]);
+        `, [userId]);
         return result[0];
     } catch (error) {
         console.error("Error fetching user by ID:", error);
@@ -31,7 +30,7 @@ const getUserById = async (userID) => {
 const addUser = async (userName, userAge, userEmail, userRole, userPassword, userUsername) => {
     try {
         const [result] = await pool.query(`
-            INSERT INTO Users (userName, userAge, userEmail, userRole, userPassword, userUsername) 
+            INSERT INTO users (userName, userAge, userEmail, userRole, userPassword, userUsername) 
             VALUES (?, ?, ?, ?, ?, ?)
         `, [userName, userAge, userEmail, userRole, userPassword, userUsername]);
         return result;
@@ -44,7 +43,7 @@ const addUser = async (userName, userAge, userEmail, userRole, userPassword, use
 const editUser = async (userId, userName, userAge, userEmail, userRole, userPassword, userUsername) => {
     try {
         await pool.query(`
-            UPDATE Users 
+            UPDATE users 
             SET userName = ?, userAge = ?, userEmail = ?, userRole = ?, userPassword = ?, userUsername = ? 
             WHERE userId = ?
         `, [userName, userAge, userEmail, userRole, userPassword, userUsername, userId]);
@@ -59,7 +58,7 @@ const editUser = async (userId, userName, userAge, userEmail, userRole, userPass
 const deleteUser = async (userId) => {
     try {
         const [result] = await pool.query(`
-            DELETE FROM Users
+            DELETE FROM users
             WHERE userId = ?
         `, [userId]);
         return result;
@@ -68,5 +67,19 @@ const deleteUser = async (userId) => {
         throw error;
     }
 };
+const checkUser = async (userName) => {
+    try {
+        const [[{ userPassword }]] = await pool.query(`
+            SELECT userPassword  
+            FROM users 
+            WHERE userName = ?
+        `, [userName]);
+        return userPassword;
+    } catch (error) {
+        console.error("Error checking user:", error);
+        throw error;
+    }
+};
 
-export { getUserById, getUsers, addUser, editUser, deleteUser };
+
+export { getUserById, getUsers, addUser, editUser, deleteUser, checkUser };
