@@ -24,8 +24,8 @@ export default {
     },
     addingItem: async (req, res) => {
         try {
-            const { productName, productDesc, Category, Price, productUrl, userId } = req.body;
-            await addProduct(productName, productDesc, Category, Price, productUrl, userId);
+            const { productName, productDesc, Category, Price, productUrl} = req.body;
+            await addingItem(productName, productDesc, Category, Price, productUrl);
             res.send({
                 msg: 'New Product Added'
             });
@@ -44,7 +44,7 @@ export default {
     },
     delItem: async (req, res) => {
         try {
-            const deletedProduct = await deleteProduct(req.params.productId);
+            const deletedProduct = await delItem(+req.params.productId);
             if (!deletedProduct) {
                 res.status(404).send({ error: 'Product not found' });
                 return;
