@@ -9,7 +9,7 @@ router.route('/')
 
 router.route('/:productId')
 
-.get(controller.getItemById)
+.get(controller.getItemId)
 .patch(controller.editingItem)
 .delete(controller.delItem)
 

@@ -63,8 +63,9 @@ export default {
     logIn: async (req, res, next) => {
         const { userUsername, userPassword } = req.body;
         try {
-            const storedPassword = await checkUser(userUsername);
-            if (userPassword === storedPassword) {
+            const hashpassword = await checkUser(userUsername);
+            const result = await bcrypt.compare(userPassword, hashpassword); // Compare with hashed password
+            if (result) {
                 const token = jwt.sign({ userUsername }, JWT_SECRET, { expiresIn: '1h' });
                 res.json({ token });
                 return;
@@ -74,6 +75,5 @@ export default {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
-    
     
 };

@@ -13,13 +13,13 @@ const getAllItems = async () => {
     }
 };
 
-const getItemById = async (prodID) => {
+const getItemId = async (productId) => {
     try {
         const [product] = await pool.query(`
             SELECT *
             FROM products
             WHERE productId = ?
-        `, [prodID]);
+        `, [productId]);
         return product[0];
     } catch (error) {
         console.error("Error fetching product by ID:", error);
@@ -40,14 +40,14 @@ const addingItem = async (prodName, productDesc, Category, Price, productUrl, us
     }
 };
 
-const editingItem = async (prodName, productDesc, Category, Price, productUrl, userId, prodID) => {
+const editingItem = async (prodName, productDesc, Category, Price, productUrl, userId, productId) => {
     try {
         await pool.query(`
             UPDATE products 
             SET productName = ?, productDesc = ?, Category = ?, Price = ?, productUrl = ?, userId = ? 
             WHERE productId = ?
-        `, [prodName, productDesc, Category, Price, productUrl, userId, prodID]);
-        const updatedProduct = await getProductById(prodID);
+        `, [prodName, productDesc, Category, Price, productUrl, userId, productId]);
+        const updatedProduct = await getProductById(productId);
         return updatedProduct;
     } catch (error) {
         console.error("Error editing product:", error);
@@ -55,12 +55,12 @@ const editingItem = async (prodName, productDesc, Category, Price, productUrl, u
     }
 };
 
-const delItem = async (prodID) => {
+const delItem = async (productId) => {
     try {
         const [result] = await pool.query(`
             DELETE FROM products
             WHERE productId = ?
-        `, [prodID]);
+        `, [productId]);
         return result;
     } catch (error) {
         console.error("Error deleting product:", error);
@@ -68,4 +68,4 @@ const delItem = async (prodID) => {
     }
 };
 
-export { getItemById, getAllItems, addingItem, editingItem, delItem };
+export { getItemId, getAllItems, addingItem, editingItem, delItem };

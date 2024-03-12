@@ -27,23 +27,31 @@ app.listen(PORT, () => {
 app.post('/login', async (req, res) => {
     const { userUsername, userPassword } = req.body;
     try {
-        const storedPassword = await checkUser(userUsername);
-        if (!storedPassword) {
+        const hashPassword = await checkUser(userUsername);
+        if (!hashPassword) {
             return res.status(401).send({
                 msg: 'User not found'
             });
         }
-        if (userPassword === storedPassword) {
-            const token = jwt.sign({ userUsername: userUsername }, process.env.SECRET_KEY);
-            return res.send({
-                token: token,
-                msg: 'You have logged in'
-            });
-        } else {
-            return res.status(401).send({
-                msg: 'Passwords do not match'
-            });
-        }
+        bcrypt.compare(userPassword, hashPassword, (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send({
+                    msg: 'Internal Server Error'
+                });
+            }
+            if (result) {
+                const token = jwt.sign({ userUsername: userUsername }, process.env.SECRET_KEY);
+                return res.send({
+                    token: token,
+                    msg: 'You have logged in'
+                });
+            } else {
+                return res.status(401).send({
+                    msg: 'Passwords do not match'
+                });
+            }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send({

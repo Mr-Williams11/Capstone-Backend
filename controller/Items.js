@@ -1,4 +1,4 @@
-import { getAllItems, getItemById, addingItem, editingItem, delItem } from "../models/Items.js";
+import { getItemId, getAllItems, addingItem, editingItem, delItem } from "../models/Items.js";
 
 export default {
     getAllItems: async (req, res) => {
@@ -9,7 +9,7 @@ export default {
             res.status(500).send({ error: 'Internal Server Error' });
         }
     },
-    getItemById: async (req, res) => {
+    getItemId: async (req, res) => {
         try {
             const productId = +req.params.productId;
             const product = await getProductById(productId);
