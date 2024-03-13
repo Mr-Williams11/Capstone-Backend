@@ -2,7 +2,7 @@ import {config} from 'dotenv'
 config()
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { verifyUser } from '../models/Users.js';
+import { checkUser } from '../models/Users.js';
 
 // middleware for authentication of the user
 const verifyToken = (req, res, next) => {
@@ -22,7 +22,7 @@ const verifyToken = (req, res, next) => {
 // Token generator
 const createToken = async (req, res, next) => {
         const {emailAdd, userPass} = req.body
-        const hashedUserPass = await verifyUser(emailAdd)
+        const hashedUserPass = await checkUser(emailAdd)
         bcrypt.compare(userPass,hashedUserPass,(err,result) =>{
             if (err) throw err
             if(result === true){
