@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken'; // Add jwt import
 import UsersRouter from './routes/user.js';
 import ItemsRouter from './routes/items.js';
 import { addUser, checkUser, getUsers } from './models/Users.js';
+import { createToken } from './middleware/auth.js';
 
 config();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use(express.static('static'));
 app.use('/users', UsersRouter);
 app.use('/items', ItemsRouter);
+app.use('/login', createToken, UsersRouter)
 
 app.listen(PORT, () => {
     console.log('Server is running on http://localhost:' + PORT);
