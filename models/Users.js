@@ -68,6 +68,7 @@ const deleteUser = async (userId) => {
     }
 };
 const checkUser = async (userUsername) => {
+    console.log(userUsername);
     try {
         const [[{ userPassword }]] = await pool.query(`
             SELECT userPassword  

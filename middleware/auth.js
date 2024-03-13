@@ -21,6 +21,7 @@ const verifyToken = (req, res, next) => {
 };
 // Token generator
 const createToken = async (req, res, next) => {
+        console.log('user info:'+JSON.stringify(req.body));
         const {userUsername, userPassword} = req.body
         const hashedUserPass = await checkUser(userUsername)
         bcrypt.compare(userPassword,hashedUserPass,(err,result) =>{
