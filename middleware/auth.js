@@ -21,12 +21,12 @@ const verifyToken = (req, res, next) => {
 };
 // Token generator
 const createToken = async (req, res, next) => {
-        const {emailAdd, userPass} = req.body
-        const hashedUserPass = await checkUser(emailAdd)
-        bcrypt.compare(userPass,hashedUserPass,(err,result) =>{
+        const {userUsername, userPassword} = req.body
+        const hashedUserPass = await checkUser(userUsername)
+        bcrypt.compare(userPassword,hashedUserPass,(err,result) =>{
             if (err) throw err
             if(result === true){
-                const token = jwt.sign({emailAdd:emailAdd}, process.env.SECRET_KEY,{expiresIn:'1h'})
+                const token = jwt.sign({userUsername:userUsername}, process.env.SECRET_KEY,{expiresIn:'1h'})
                 res.cookie('jwt', token, {httpOnly:false})
                 res.send({
                     token:token,
