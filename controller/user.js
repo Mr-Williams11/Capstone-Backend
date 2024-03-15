@@ -61,15 +61,16 @@ export default {
         }
     },
     logIn: async (req, res, next) => {
-        const { userUsername, userPassword } = req.body;
         try {
+            const { userUsername, userPassword } = req.body;
             const hashpassword = await checkUser(userUsername);
             const result = await bcrypt.compare(userPassword, hashpassword); // Compare with hashed password
             let userin = await getUserById(userUsername)
             if (result === true) {
                 res.send({
-                    msg: `Logged in as ${userin[0].name}`, 
-                    user: userin
+                    msg: `Logged in as ${userUsername}`,
+                    token: req.token, 
+                    user: userin,
                 })
             }
             res.status(401).json({ error: 'Authentication failed' });
