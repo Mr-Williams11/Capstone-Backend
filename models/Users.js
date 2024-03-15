@@ -13,14 +13,14 @@ const getUsers = async () => {
     }
 };
 
-const getUserById = async (userId) => {
+const getUserById = async (userUsername) => {
     try {
         const [result] = await pool.query(`
             SELECT *
             FROM users
-            WHERE userId = ?
-        `, [userId]);
-        return result[0];
+            WHERE userUsername = ?
+        `, [userUsername]);
+        return result;
     } catch (error) {
         console.error("Error fetching user by ID:", error);
         throw error;

@@ -61,15 +61,16 @@ export default {
         }
     },
     logIn: async (req, res, next) => {
-        console.log(JSON.stringify(req.body));
         const { userUsername, userPassword } = req.body;
         try {
             const hashpassword = await checkUser(userUsername);
             const result = await bcrypt.compare(userPassword, hashpassword); // Compare with hashed password
-            if (result) {
-                const token = jwt.sign({ userUsername }, JWT_SECRET, { expiresIn: '1h' });
-                // res.json({ token });
-                return;
+            let userin = await getUserById(userUsername)
+            if (result === true) {
+                res.send({
+                    msg: `Logged in as ${userin[0].name}`, 
+                    user: userin
+                })
             }
             res.status(401).json({ error: 'Authentication failed' });
         } catch (error) {
