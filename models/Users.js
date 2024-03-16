@@ -13,7 +13,21 @@ const getUsers = async () => {
     }
 };
 
-const getUserById = async (userUsername) => {
+const getUserById = async (userId) => {
+    try {
+        const [result] = await pool.query(`
+            SELECT *
+            FROM users
+            WHERE userId = ?
+        `, [userId]);
+        return result;
+    } catch (error) {
+        console.error("Error fetching user by ID:", error);
+        throw error;
+    }
+};
+
+const getUserByUsername = async (userUsername) => {
     try {
         const [result] = await pool.query(`
             SELECT *
@@ -83,4 +97,4 @@ const checkUser = async (userUsername) => {
 };
 
 
-export { getUserById, getUsers, addUser, editUser, deleteUser, checkUser };
+export { getUserById, getUsers, addUser, editUser, deleteUser, checkUser, getUserByUsername };
