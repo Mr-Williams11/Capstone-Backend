@@ -1,4 +1,4 @@
-import { getItemId, getAllItems, addingItem, editingItem, delItem } from "../models/Items.js";
+import { getAllItems, getItemId, addingItem, editingItem, delItem } from "../models/Items.js";
 
 export default {
     getAllItems: async (req, res) => {
@@ -12,7 +12,7 @@ export default {
     getItemId: async (req, res) => {
         try {
             const productId = +req.params.productId;
-            const product = await getProductById(productId);
+            const product = await getItemId(productId);
             if (!product) {
                 res.status(404).send({ error: 'Product not found' });
                 return;
@@ -36,7 +36,7 @@ export default {
     editingItem: async (req, res) => {
         try {
             const { productName, productDesc, Category, Price, productUrl } = req.body;
-            await editProduct(productName, productDesc, Category, Price, productUrl, +req.params.productId);
+            await editingItem(productName, productDesc, Category, Price, productUrl, +req.params.productId);
             res.send({ msg: 'Edited Product Successfully' });
         } catch (error) {
             res.status(500).send({ error: 'Internal Server Error' });

@@ -40,14 +40,14 @@ const addingItem = async (prodName, productDesc, Category, Price, productUrl, us
     }
 };
 
-const editingItem = async (prodName, productDesc, Category, Price, productUrl, userId, productId) => {
+const editingItem = async ( productName, productDesc, Category, Price, productUrl, productId) => {
     try {
         await pool.query(`
             UPDATE products 
-            SET productName = ?, productDesc = ?, Category = ?, Price = ?, productUrl = ?, userId = ? 
+            SET productName = ?, productDesc = ?, Category = ?, Price = ?, productUrl = ?
             WHERE productId = ?
-        `, [prodName, productDesc, Category, Price, productUrl, userId, productId]);
-        const updatedProduct = await getProductById(productId);
+        `, [productName, productDesc, Category, Price, productUrl, productId]);
+        const updatedProduct = await getItemId(productId);
         return updatedProduct;
     } catch (error) {
         console.error("Error editing product:", error);
