@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUsers, getUserById, addUser, editUser, deleteUser, checkUser } from "../models/Users.js";
+import { getUsers, getUserById, addUser, editUser, deleteUser, checkUser, getUserByUsername } from "../models/Users.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -65,7 +65,7 @@ export default {
             const { userUsername, userPassword } = req.body;
             const hashpassword = await checkUser(userUsername);
             const result = await bcrypt.compare(userPassword, hashpassword); // Compare with hashed password
-            let userin = await getUserById(userUsername)
+            let userin = await getUserByUsername(userUsername)
             if (result === true) {
                 res.send({
                     msg: `Logged in as ${userUsername}`,
