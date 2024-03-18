@@ -21,20 +21,18 @@ const verifyToken = (req, res, next) => {
 };
 // Token generator
 const createToken = async (req, res, next) => {
-        console.log('user info:'+JSON.stringify(req.body));
         const {userUsername, userPassword} = req.body
         const hashedUserPass = await checkUser(userUsername)
         bcrypt.compare(userPassword,hashedUserPass,(err,result) =>{
             if (err) throw err
             if(result === true){
                 const token = jwt.sign({userUsername:userUsername}, process.env.SECRET_KEY,{expiresIn:'1h'})
-                res.cookie('jwt', token, {httpOnly:false})
-                res.send({
-                    token:token,
-                    msg: "You have logged in successfully!"})
+            
+                 req.token = token;
                 next()
             }else {
-                res.send({msg: "The username or password does not match"})
+                console.log("Passwords do not match!");
+                return res.status(401).send({msg: "The username or password does not match"})
             }
         })
     }

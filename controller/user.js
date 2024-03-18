@@ -60,20 +60,23 @@ export default {
             res.status(500).send({ error: 'Internal Server Error' });
         }
     },
+
     logIn: async (req, res, next) => {
         try {
             const { userUsername, userPassword } = req.body;
             const hashpassword = await checkUser(userUsername);
             const result = await bcrypt.compare(userPassword, hashpassword); // Compare with hashed password
-            let userin = await getUserByUsername(userUsername)
+            let userIn = await getUserByUsername(userUsername)
             if (result === true) {
+                console.log(userIn);
                 res.send({
                     msg: `Logged in as ${userUsername}`,
                     token: req.token, 
-                    user: userin,
+                    user: userIn,
                 })
+            } else{
+                res.status(401).json({ error: 'Authentication failed' });
             }
-            res.status(401).json({ error: 'Authentication failed' });
         } catch (error) {
             res.status(500).json({ error: 'Internal Server Error' });
         }
