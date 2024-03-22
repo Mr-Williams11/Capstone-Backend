@@ -16,7 +16,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:8080",
+    origin: "https://capstone-project-69548.web.app",
     credentials: true
 }));
 app.use(express.json());
